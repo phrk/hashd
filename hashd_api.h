@@ -1,8 +1,13 @@
-#ifndef _HASHD_H_
-#define _HASHD_H_
+#ifndef _HASHD_API_H_
+#define _HASHD_API_H_
+
+#include "hiconfig.h"
 
 #include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
 #include "hiaux/network/HttpApi.h"
+#include <string>
+#include <vector>
 #include "hiaux/strings/string_utils.h"
 
 class HashdApi {

@@ -1,3 +1,4 @@
+#include "hiconfig.h"
 #include "hashd.h"
 
 int main (int argc, char **argv) {

@@ -4,10 +4,15 @@
 #include "hiconfig.h"
 #include "hiaux/structs/hashtable.h"
 
+#include <string>
+#include <vector>
 #include <boost/shared_ptr.hpp>
+
 
 class HashCore {
 public:
+	
+	HashCore();
 	
 	void onSet(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp);
 	void onSetWithTtl(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, std::string &_resp);

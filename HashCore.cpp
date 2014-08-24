@@ -1,5 +1,9 @@
 #include "HashCore.h"
 
+HashCore::HashCore() {
+	
+}
+
 void HashCore::onSet(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp) {
 	
 }

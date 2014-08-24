@@ -4,7 +4,21 @@ std::string HashdApi::buildApiError(const std::string &_err) {
 	return "{ \"status_code\" : \"-1\", \"status\" : \"" + _err + "\" }";
 }
 
-HashdApi::HashdApi() {
+HashdApi::HashdApi(boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp)> _onSet,
+		boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, std::string &_resp)> _onSetWithTtl,
+		boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp)> _onGet,
+		boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, std::string &_resp)> _onGetWithTtl,
+		boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp)> _onDel,
+		boost::function<void(const std::string &_hash, uint64_t _n, std::string &_resp)> _onSetHashNlruShots,
+		boost::function<void(const std::string &_hash, uint64_t _ttl, std::string &_resp)> _onSetHashDefaultTtl):
+	
+	m_onSet(_onSet),
+	m_onSetWithTtl(_onSetWithTtl),
+	m_onGet(_onGet),
+	m_onGetWithTtl(_onGetWithTtl),
+	m_onDel(_onDel),
+	m_onSetHashNlruShots(_onSetHashNlruShots),
+	m_onSetHashDefaultTtl(_onSetHashDefaultTtl) {
 	
 	m_api.reset(new HttpApi( boost::bind(&HashdApi::buildApiError, this, _1)));
 	

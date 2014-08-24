@@ -3,6 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include "hiaux/network/HttpApi.h"
+#include "hiaux/strings/string_utils.h"
 
 class HashdApi {
 	

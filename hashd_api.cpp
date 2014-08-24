@@ -74,28 +74,39 @@ void HashdApi::handle(HttpSrv::ConnectionPtr _conn, HttpSrv::RequestPtr _req) {
 
 void HashdApi::onSet(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp) {
 	
+	m_onSet(_params["hash"], _params["k"], _params["v"], _resp);
 }
 
 void HashdApi::onSetWithTtl(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp) {
 	
+	uint64_t ttl_inc = string_to_uint64(_params["ttl-inc"]);
+	m_onSetWithTtl(_params["hash"], _params["k"], _params["v"], ttl_inc, _resp);
 }
 
 void HashdApi::onGet(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp) {
 	
+	m_onGet(_params["hash"], _params["k"], _params["v"], _resp);
 }
 
 void HashdApi::onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp) {
 	
+	uint64_t ttl_inc = string_to_uint64(_params["ttl-inc"]);
+	m_onGetWithTtl(_params["hash"], _params["k"], _params["v"], ttl_inc, _resp);
 }
 
 void HashdApi::onDel(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp) {
 	
+	m_onDel(_params["hash"], _params["k"], _params["v"], _resp);
 }
 
 void HashdApi::onSetHashNlruShots(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp) {
 	
+	uint64_t n = string_to_uint64(_params["n"]);
+	m_onSetHashNlruShots(_params["hash"], n, _resp);
 }
 
 void HashdApi::onSetHashDefaultTtl(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp) {
 	
+	uint64_t ttl = string_to_uint64(_params["ttl"]);
+	m_onSetHashNlruShots(_params["hash"], ttl, _resp);
 }

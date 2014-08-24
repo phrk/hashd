@@ -1,0 +1,11 @@
+{
+
+"_NAME" : "hashd",
+
+"_LINKFLAGS" : [],
+
+"_CPPFILES" : [ { "type": "Glob", "mask": "*.cpp" } ],
+
+"_DEPS" : [ "../hiaux/tools/" ]
+
+}

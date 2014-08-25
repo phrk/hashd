@@ -16,33 +16,33 @@ class HashdApi {
 	
 	std::string buildApiError(const std::string &_err);
 	
-	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp)> m_onSet;
-	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, std::string &_resp)> m_onSetWithTtl;
-	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp)> m_onGet;
-	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, std::string &_resp)> m_onGetWithTtl;
-	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp)> m_onDel;
-	boost::function<void(const std::string &_hash, uint64_t _n, std::string &_resp)> m_onSetHashNlruShots;
-	boost::function<void(const std::string &_hash, uint64_t _ttl, std::string &_resp)> m_onSetHashDefaultTtl;
+	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v)> m_onSet;
+	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc)> m_onSetWithTtl;
+	boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v)> m_onGet;
+	boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v)> m_onGetWithTtl;
+	boost::function<void(const std::string &_hash, const std::string &_k)> m_onDel;
+	boost::function<void(const std::string &_hash, uint64_t _n)> m_onSetHashNlruShots;
+	boost::function<void(const std::string &_hash, uint64_t _ttl)> m_onSetHashDefaultTtl;
 	
 public:
 	
-	HashdApi(boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp)> _onSet,
-			boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, std::string &_resp)> _onSetWithTtl,
-			boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp)> _onGet,
-			boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, std::string &_resp)> _onGetWithTtl,
-			boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, std::string &_resp)> _onDel,
-			boost::function<void(const std::string &_hash, uint64_t _n, std::string &_resp)> _onSetHashNlruShots,
-			boost::function<void(const std::string &_hash, uint64_t _ttl, std::string &_resp)> _onSetHashDefaultTtl);
+	HashdApi(boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v)> _onSet,
+			boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc)> _onSetWithTtl,
+			boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v)> _onGet,
+			boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v)> _onGetWithTtl,
+			boost::function<void(const std::string &_hash, const std::string &_k)> _onDel,
+			boost::function<void(const std::string &_hash, uint64_t _n)> _onSetHashNlruShots,
+			boost::function<void(const std::string &_hash, uint64_t _ttl)> _onSetHashDefaultTtl);
 	
 	void handle(HttpSrv::ConnectionPtr _conn, HttpSrv::RequestPtr _req);
 	
-	void onSet(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp);
-	void onSetWithTtl(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp);
-	void onGet(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp);
-	void onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp);
-	void onDel(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp);
-	void onSetHashNlruShots(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp);
-	void onSetHashDefaultTtl(hiaux::hashtable<std::string, std::string> &_params, std::string &_resp);
+	void onSet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onSetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onGet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onDel(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onSetHashNlruShots(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onSetHashDefaultTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 };
 
 typedef boost::shared_ptr<HashdApi> HashdApiPtr;

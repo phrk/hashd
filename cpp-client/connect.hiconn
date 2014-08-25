@@ -1,0 +1,12 @@
+{
+
+"_NAME" : "hashd_client",
+
+"_LINKFLAGS" : [],
+
+"_CPPFILES" : [ { "type": "Glob", "mask": "*.cpp" } ],
+
+"_DEPS" : [ "../../hiaux/strings/",
+	 		"../../hiaux/network/" ]
+
+}

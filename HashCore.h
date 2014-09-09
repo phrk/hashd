@@ -29,13 +29,14 @@ class HashCore {
 		Hash();
 		void set(const std::string &_k, const std::string &_v);
 		void setWithTtl(const std::string &_k, const std::string &_v, uint64_t &_ttl_inc);
-		void get(const std::string &_k, std::string &_v);
+		bool get(const std::string &_k, std::string &_v);
 		void getWithTtl(const std::string &_k, uint64_t _ttl_inc, std::string &_v);
 		void del(const std::string &_k);
 		
 		void setHashNlruShots(uint64_t _n);
 		void setHashDefaultTtl(uint64_t _ttl);
 	};
+	
 	
 	hiaux::hashtable<std::string, Hash> m_hashes;
 	hAutoLock m_lock;
@@ -46,7 +47,7 @@ public:
 	
 	void onSet(const std::string &_hash, const std::string &_k, const std::string &_v);
 	void onSetWithTtl(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc);
-	void onGet(const std::string &_hash, const std::string &_k, std::string &_v);
+	void onGet(const std::string &_hash, const std::string &_k, bool &_exists, std::string &_v);
 	void onGetWithTtl(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v);
 	void onDel(const std::string &_hash, const std::string &_k);
 	void onSetHashNlruShots(const std::string &_hash, uint64_t _n);

@@ -1,0 +1,5 @@
+
+message PbGetResp {
+	required bool exists = 1;
+	required string value = 2;
+};

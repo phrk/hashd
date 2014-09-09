@@ -4,7 +4,8 @@
 
 "_LINKFLAGS" : [],
 
-"_CPPFILES" : [ { "type": "Glob", "mask": "*.cpp" } ],
+"_CPPFILES" : [ { "type": "Glob", "mask": "*.cpp" },
+				{ "type": "Glob", "mask": "*.cc" } ],
 
 "_DEPS" : [ "../hiaux/tools/" ]
 

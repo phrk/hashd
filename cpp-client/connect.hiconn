@@ -7,6 +7,7 @@
 "_CPPFILES" : [ { "type": "Glob", "mask": "*.cpp" } ],
 
 "_DEPS" : [ "../../hiaux/strings/",
-	 		"../../hiaux/network/" ]
+	 		"../../hiaux/network/",
+			"../" ]
 
 }

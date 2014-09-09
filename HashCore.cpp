@@ -16,10 +16,14 @@ void HashCore::onSetWithTtl(const std::string &_hash, const std::string &_k, con
 	m_hashes[_hash].setWithTtl(_k, _v, _ttl_inc);
 }
 
-void HashCore::onGet(const std::string &_hash, const std::string &_k, std::string &_v) {
+void HashCore::onGet(const std::string &_hash, const std::string &_k, bool &_exists, std::string &_v) {
 	
 	hLockTicketPtr ticket = m_lock.lock();
-	m_hashes[_hash].get(_k, _v);
+	
+	if (m_hashes[_hash].get(_k, _v))
+		_exists = true;
+	else
+		_exists = false;
 }
 
 void HashCore::onGetWithTtl(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v) {

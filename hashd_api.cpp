@@ -6,7 +6,7 @@ std::string HashdApi::buildApiError(const std::string &_err) {
 
 HashdApi::HashdApi(boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v)> _onSet,
 		boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc)> _onSetWithTtl,
-		boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v)> _onGet,
+		boost::function<void(const std::string &_hash, const std::string &_k, bool &_exists, std::string &_v)> _onGet,
 		boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v)> _onGetWithTtl,
 		boost::function<void(const std::string &_hash, const std::string &_k)> _onDel,
 		boost::function<void(const std::string &_hash, uint64_t _n)> _onSetHashNlruShots,
@@ -21,6 +21,8 @@ HashdApi::HashdApi(boost::function<void(const std::string &_hash, const std::str
 	m_onSetHashDefaultTtl(_onSetHashDefaultTtl) {
 	
 	m_api.reset(new HttpApi( boost::bind(&HashdApi::buildApiError, this, _1)));
+	
+	m_api->addUser("_user_", "_key_");
 	
 	std::vector<std::string> args_names;
 
@@ -84,9 +86,13 @@ void HashdApi::onSetWithTtl(hiaux::hashtable<std::string, std::string> &_params,
 
 void HashdApi::onGet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
 	
-	std::string v;
-	m_onGet(_params["hash"], _params["k"], v);
-	_onDone(v);
+	
+	GetResp pb;
+	m_onGet(_params["hash"], _params["k"], pb.exists, pb.value);
+	
+	std::string resp;
+	pb.dump(resp);
+	_onDone(resp);
 }
 
 void HashdApi::onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {

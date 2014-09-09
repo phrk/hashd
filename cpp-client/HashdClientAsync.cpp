@@ -1,7 +1,7 @@
 #include "HashdClientAsync.h"
 
 HashdClientAsync::HashdClientAsync(const std::string &_apiurl, HttpOutRequestDispPtr _req_disp):
-	m_http_api(_apiurl),
+	m_http_api(_apiurl, "_user_", "_key_"),
 	m_req_disp(_req_disp) {
 	
 }
@@ -85,16 +85,20 @@ void HashdClientAsync::onCalledContextBoolFail(CallContextPtr _context) {
 	context->onDone(false);
 }
 
-void HashdClientAsync::onCalledContextBoolStringOk(CallContextPtr _context, const std::string &_resp) {
+void HashdClientAsync::onCalledContextBoolBoolStringOk(CallContextPtr _context, const std::string &_resp) {
 	
-	HashdContextBoolString* context = ( (HashdContextBoolString*) _context.get() );
-	context->onDone(true, _resp);
+	// parse _resp
+	GetResp pb;
+	pb.restore(_resp);
+	
+	HashdContextBoolBoolString* context = ( (HashdContextBoolBoolString*) _context.get() );
+	context->onDone(true, pb.exists, pb.value);
 }
 
-void HashdClientAsync::onCalledContextBoolStringFail(CallContextPtr _context) {
+void HashdClientAsync::onCalledContextBoolBoolStringFail(CallContextPtr _context) {
 	
-	HashdContextBoolString* context = ( (HashdContextBoolString*) _context.get() );
-	context->onDone(false, "");
+	HashdContextBoolBoolString* context = ( (HashdContextBoolBoolString*) _context.get() );
+	context->onDone(false, false, "");
 }
 
 // Public methods
@@ -118,7 +122,7 @@ void HashdClientAsync::set(const std::string &_hash, const std::string &_k, cons
 
 	m_req_disp->addRequester(requester);
 }
-
+/*
 void HashdClientAsync::setWithTtl(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, boost::function<void(bool)> _onDone) {
 
 	std::string url;
@@ -138,13 +142,13 @@ void HashdClientAsync::setWithTtl(const std::string &_hash, const std::string &_
 
 	m_req_disp->addRequester(requester);
 }
-
-void HashdClientAsync::get(const std::string &_hash, const std::string &_k, boost::function<void(bool, const std::string &_v)> _onDone) {
+*/
+void HashdClientAsync::get(const std::string &_hash, const std::string &_k, boost::function<void(bool, bool, const std::string &_v)> _onDone) {
 	
 	std::string url;
 	buildGetUrl(_hash, _k, url);
 	
-	HashdContextBoolStringPtr context (new HashdContextBoolString);
+	HashdContextBoolBoolStringPtr context (new HashdContextBoolBoolString);
 	context->onDone = _onDone;
 	
 	HttpOutRequestDisp::RequesterPtr requester
@@ -153,12 +157,12 @@ void HashdClientAsync::get(const std::string &_hash, const std::string &_k, boos
 										boost::bind(&HttpOutRequestDisp::onRequesterFinished, m_req_disp.get(), _1),
 										context,
 										url,
-										boost::bind(&HashdClientAsync::onCalledContextBoolStringOk, this, _1, _2),
-										boost::bind(&HashdClientAsync::onCalledContextBoolStringFail, this, _1)));
+										boost::bind(&HashdClientAsync::onCalledContextBoolBoolStringOk, this, _1, _2),
+										boost::bind(&HashdClientAsync::onCalledContextBoolBoolStringFail, this, _1)));
 
 	m_req_disp->addRequester(requester);
 }
-
+/*
 void HashdClientAsync::getWithTtl(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, boost::function<void(bool, const std::string &_v)> _onDone) {
 	
 	std::string url;
@@ -238,3 +242,4 @@ void HashdClientAsync::setHashDefaultTtl(const std::string &_hash, uint64_t _ttl
 
 	m_req_disp->addRequester(requester);
 }
+*/

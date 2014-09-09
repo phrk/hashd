@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include "hiaux/strings/string_utils.h"
+#include "GetResp.h"
 
 class HashdApi {
 	
@@ -18,7 +19,7 @@ class HashdApi {
 	
 	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v)> m_onSet;
 	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc)> m_onSetWithTtl;
-	boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v)> m_onGet;
+	boost::function<void(const std::string &_hash, const std::string &_k, bool &_exists, std::string &_v)> m_onGet;
 	boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v)> m_onGetWithTtl;
 	boost::function<void(const std::string &_hash, const std::string &_k)> m_onDel;
 	boost::function<void(const std::string &_hash, uint64_t _n)> m_onSetHashNlruShots;
@@ -28,7 +29,7 @@ public:
 	
 	HashdApi(boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v)> _onSet,
 			boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc)> _onSetWithTtl,
-			boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v)> _onGet,
+			boost::function<void(const std::string &_hash, const std::string &_k, bool &_exists, std::string &_v)> _onGet,
 			boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v)> _onGetWithTtl,
 			boost::function<void(const std::string &_hash, const std::string &_k)> _onDel,
 			boost::function<void(const std::string &_hash, uint64_t _n)> _onSetHashNlruShots,

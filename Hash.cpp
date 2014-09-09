@@ -39,14 +39,16 @@ void HashCore::Hash::setWithTtl(const std::string &_k, const std::string &_v, ui
 	}
 }
 
-void HashCore::Hash::get(const std::string &_k, std::string &_v) {
+bool HashCore::Hash::get(const std::string &_k, std::string &_v) {
 	
 	hiaux::hashtable<std::string, Record>::iterator it = m_records.find(_k);
 	
 	if (it == m_records.end()) {
 		
+		return false;
 	} else
 		_v = it->second.value;
+	return true;
 }
 
 void HashCore::Hash::getWithTtl(const std::string &_k, uint64_t _ttl_inc, std::string &_v) {

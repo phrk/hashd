@@ -28,22 +28,23 @@ class HashdApi {
 public:
 	
 	HashdApi(boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v)> _onSet,
-			boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc)> _onSetWithTtl,
+//			boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc)> _onSetWithTtl,
 			boost::function<void(const std::string &_hash, const std::string &_k, bool &_exists, std::string &_v)> _onGet,
-			boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v)> _onGetWithTtl,
-			boost::function<void(const std::string &_hash, const std::string &_k)> _onDel,
-			boost::function<void(const std::string &_hash, uint64_t _n)> _onSetHashNlruShots,
-			boost::function<void(const std::string &_hash, uint64_t _ttl)> _onSetHashDefaultTtl);
+//			boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v)> _onGetWithTtl,
+			boost::function<void(const std::string &_hash, const std::string &_k)> _onDel
+//			boost::function<void(const std::string &_hash, uint64_t _n)> _onSetHashNlruShots,
+//			boost::function<void(const std::string &_hash, uint64_t _ttl)> _onSetHashDefaultTtl
+				);
 	
 	void handle(HttpSrv::ConnectionPtr _conn, HttpSrv::RequestPtr _req);
 	
 	void onSet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
-	void onSetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+//	void onSetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 	void onGet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
-	void onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+//	void onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 	void onDel(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
-	void onSetHashNlruShots(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
-	void onSetHashDefaultTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+//	void onSetHashNlruShots(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+//	void onSetHashDefaultTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 };
 
 typedef boost::shared_ptr<HashdApi> HashdApiPtr;

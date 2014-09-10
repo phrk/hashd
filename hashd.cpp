@@ -14,12 +14,13 @@ Hashd::Hashd(const std::string &_config_file) {
 	m_core.reset(new HashCore());
 	
 	m_api.reset(new HashdApi(boost::bind(&HashCore::onSet, m_core.get(), _1, _2, _3),
-		 					boost::bind(&HashCore::onSetWithTtl, m_core.get(), _1, _2, _3, _4),
+		 	//				boost::bind(&HashCore::onSetWithTtl, m_core.get(), _1, _2, _3, _4),
 							boost::bind(&HashCore::onGet, m_core.get(), _1, _2, _3, _4),
-							boost::bind(&HashCore::onGetWithTtl, m_core.get(), _1, _2, _3, _4),
-							boost::bind(&HashCore::onDel, m_core.get(), _1, _2),
-							boost::bind(&HashCore::onSetHashNlruShots, m_core.get(), _1, _2),
-							boost::bind(&HashCore::onSetHashDefaultTtl, m_core.get(), _1, _2)));
+			//				boost::bind(&HashCore::onGetWithTtl, m_core.get(), _1, _2, _3, _4),
+							boost::bind(&HashCore::onDel, m_core.get(), _1, _2)
+			//				boost::bind(&HashCore::onSetHashNlruShots, m_core.get(), _1, _2),
+			//				boost::bind(&HashCore::onSetHashDefaultTtl, m_core.get(), _1, _2)
+			));
 	
 }
 

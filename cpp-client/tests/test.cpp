@@ -29,18 +29,14 @@ int main (int argv, char **argc) {
 					max_parallel, 
 					boost::bind(&onFinished)));
 		
-		
-		
 		HttpOutRequestDispPtr req_disp(new HttpOutRequestDisp(launcher));
 		HashdClientAsyncPtr client (new HashdClientAsync(apiurl, req_disp));
 	
-	//	client->set("_hash_", "_key_", "_value_1488_", boost::bind(&onFinished, _1));
+		client->set("_hash_", "_key_", "_value_1488_", boost::bind(&onFinished, _1));
 	
 		sleep(1);
 	
 		client->get("_hash_", "_key_", boost::bind(&onGot, _1, _2, _3));
-	
-	
 		
 		pool->join();
 	

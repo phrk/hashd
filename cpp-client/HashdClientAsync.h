@@ -4,8 +4,11 @@
 #include <boost/shared_ptr.hpp>
 #include "hiaux/network/HttpApiClient.h"
 #include "hiaux/network/HttpSimpleRequester.h"
+#include "hiaux/network/HttpSimpleRequesterPost.h"
 
 #include "../GetResp.h"
+
+#include "hiaux/crypt/base64.h"
 
 class HashdContextBool : public CallContext {
 public:

@@ -8,6 +8,8 @@ void HashCore::onSet(const std::string &_hash, const std::string &_k, const std:
 	
 	hLockTicketPtr ticket = m_lock.lock();
 	m_hashes[_hash].set(_k, _v);
+	
+//	std::cout << "set " << _hash << " " << _k << std::endl;
 }
 /*
 void HashCore::onSetWithTtl(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc) {
@@ -24,6 +26,8 @@ void HashCore::onGet(const std::string &_hash, const std::string &_k, bool &_exi
 		_exists = true;
 	else
 		_exists = false;
+	
+//	std::cout << "get " << _hash << " " << _k << " _exists:" << _exists << std::endl;
 }
 /*
 void HashCore::onGetWithTtl(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v) {

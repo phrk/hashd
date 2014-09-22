@@ -29,7 +29,7 @@ void Hashd::doStart() {
 	std::cout << "hashd started on port " << m_config["listen_port"] << std::endl;
 }
 
-void Hashd::connHandler(HttpSrv::ConnectionPtr _conn, HttpSrv::RequestPtr _req) {	
+void Hashd::connHandler(HttpConnectionPtr _conn, HttpRequestPtr _req) {	
 	
 	m_api->handle(_conn, _req);
 }

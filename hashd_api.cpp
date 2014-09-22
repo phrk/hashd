@@ -69,7 +69,7 @@ HashdApi::HashdApi(boost::function<void(const std::string &_hash, const std::str
 	*/
 }
 
-void HashdApi::handle(HttpSrv::ConnectionPtr _conn, HttpSrv::RequestPtr _req) {
+void HashdApi::handle(HttpConnectionPtr _conn, HttpRequestPtr _req) {
 
 	m_api->handle(_conn, _req);
 }

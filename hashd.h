@@ -22,7 +22,7 @@ public:
 	virtual void setParamsList(std::vector<std::string> &_required_params, std::vector<std::string> &_optional_params);
 	virtual void doStart();
 	
-	virtual void connHandler(HttpSrv::ConnectionPtr _conn, HttpSrv::RequestPtr _req);
+	virtual void connHandler(HttpConnectionPtr _conn, HttpRequestPtr _req);
 };
 
 #endif

@@ -36,7 +36,7 @@ public:
 //			boost::function<void(const std::string &_hash, uint64_t _ttl)> _onSetHashDefaultTtl
 				);
 	
-	void handle(HttpSrv::ConnectionPtr _conn, HttpSrv::RequestPtr _req);
+	void handle(HttpConnectionPtr _conn, HttpRequestPtr _req);
 	
 	void onSet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 //	void onSetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);

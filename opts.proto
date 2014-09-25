@@ -1,0 +1,11 @@
+
+message PairPb {
+	
+	required string key = 1;
+	required string value = 2;
+};
+
+message OptsPb {
+	
+	repeated PairPb opts = 1;
+};

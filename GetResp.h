@@ -7,9 +7,9 @@
 class GetResp {
 public:
 	GetResp();
-	GetResp(bool _exist, const std::string &_value);
+	GetResp(int _err, const std::string &_value);
 	
-	bool exists;
+	int err;
 	std::string value;
 
 	void restore(const std::string &_dump);

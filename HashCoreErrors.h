@@ -1,0 +1,14 @@
+#ifndef _HASH_CORE_ERRORS_H_
+#define _HASH_CORE_ERRORS_H_
+
+#define E_HC_OK 0
+#define E_HC_HASH_DONT_EXISTS 1
+#define E_HC_KEY_DONT_EXISTS 2
+#define E_HC_CREATE_HASH_ERROR 3
+#define E_HC_INAPPLICABLE_METHOD 4
+
+#define E_HC_CONNECTIVITY_ERROR 5
+
+#define E_HC_HASH_ALREADY_EXISTS 6
+
+#endif

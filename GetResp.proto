@@ -1,5 +1,5 @@
 
 message PbGetResp {
-	required bool exists = 1;
+	required int32 err = 1;
 	required string value = 2;
 };

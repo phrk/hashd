@@ -4,30 +4,38 @@
 #include "hiconfig.h"
 #include "hiaux/structs/hashtable.h"
 #include "hiaux/threads/locks.h"
+#include "hiaux/threads/tasklauncher.h"
 
 #include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
+#include "HashCoreErrors.h"
 #include "Hash.h"
-#include "LruHash.h"
+#include "TtlHash.h"
 
 class HashCore {
 	
-	hiaux::hashtable<std::string, Hash> m_hashes;
+	TaskLauncherPtr m_launcher;
+	
+	hiaux::hashtable<std::string, HashPtr> m_hashes;
 	hAutoLock m_lock;
+	
+	uint64_t m_last_service_ts;
+	
+	TaskLauncher::TaskRet serviceTask();
+	void checkRunService();
 	
 public:
 	
-	HashCore();
+	HashCore(TaskLauncherPtr _launcher);
 	
-	void onSet(const std::string &_hash, const std::string &_k, const std::string &_v);
-//	void onSetWithTtl(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc);
-	void onGet(const std::string &_hash, const std::string &_k, bool &_exists, std::string &_v);
-//	void onGetWithTtl(const std::string &_hash, const std::string &_k, uint64_t &_ttl_inc, std::string &_v);
-	void onDel(const std::string &_hash, const std::string &_k);
-//	void onSetHashNlruShots(const std::string &_hash, uint64_t _n);
-//	void onSetHashDefaultTtl(const std::string &_hash, uint64_t _ttl);
+	void onCreateHash(const std::string &_name, const std::map<std::string, std::string> &_opts, int &_err);	
+	void onSet(const std::string &_hash, const std::string &_k, const std::string &_v, int &_err);
+	void onSetAndIncTtl(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, int &_err);
+	void onGet(const std::string &_hash, const std::string &_k, std::string &_v, int &_err);
+	void onDel(const std::string &_hash, const std::string &_k, int &_err);
+	void onGetTtl(const std::string &_hash, const std::string &_k, uint64_t &_ttl, int &_err);
 };
 
 typedef boost::shared_ptr<HashCore> HashCorePtr;

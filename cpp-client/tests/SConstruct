@@ -30,7 +30,7 @@ b.connectLib("../")
 
 #b.connectLib(hicore_path+"ranker/")
 
-b.addCCFlags(["-Wno-return-type"])
+b.addCCFlags([])
 b.addCppGlob("*.cpp")
 b.addCppGlob("*.pb.cc")
 

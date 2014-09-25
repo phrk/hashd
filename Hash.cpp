@@ -14,6 +14,11 @@ void Hash::set(const std::string &_k, const std::string &_v) {
 	} else
 		it->second = _v;
 }
+
+void Hash::set_and_inc_ttl(const std::string &_k, const std::string &_v, uint64_t &_ttl_inc) {
+	
+}
+
 /*
 void HashCore::Hash::setWithTtl(const std::string &_k, const std::string &_v, uint64_t &_ttl_inc) {
 	
@@ -52,10 +57,23 @@ void HashCore::Hash::getWithTtl(const std::string &_k, uint64_t _ttl_inc, std::s
 	}
 }
 */
-void Hash::del(const std::string &_k) {
+bool Hash::del(const std::string &_k) {
 	
 	hiaux::hashtable<std::string, std::string>::iterator it = m_records.find(_k);
-	m_records.erase(it);
+	if (it == m_records.end())
+		return false;
+	else
+		m_records.erase(it);
+	return true;
+}
+
+int Hash::getTtl(const std::string &_k, uint64_t &_ttl) {
+	
+	return E_HC_INAPPLICABLE_METHOD;
+}
+
+void Hash::doService() {
+	
 }
 /*
 void HashCore::Hash::setHashNlruShots(uint64_t _n) {

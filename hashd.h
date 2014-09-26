@@ -10,10 +10,14 @@
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
+#include "hiaux/fs/file_utils.h"
+
 class Hashd : public Daemon {
 
 	HashdApiPtr m_api;
 	HashCorePtr m_core;
+	
+	uint64_t m_last_dump_ts;
 	
 public:
 	
@@ -23,6 +27,9 @@ public:
 	virtual void doStart();
 	
 	virtual void connHandler(HttpConnectionPtr _conn, HttpRequestPtr _req);
+	
+	void checkDump();
+	void dump();
 };
 
 #endif

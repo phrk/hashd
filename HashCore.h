@@ -36,6 +36,12 @@ public:
 	void onGet(const std::string &_hash, const std::string &_k, std::string &_v, int &_err);
 	void onDel(const std::string &_hash, const std::string &_k, int &_err);
 	void onGetTtl(const std::string &_hash, const std::string &_k, uint64_t &_ttl, int &_err);
+	
+	void restoreTtlHashDescr(const char *_str);
+	void restoreTtlHashKv(const char *_str);
+	
+	void dump(int _fd);
+	void restore(int _fd);
 };
 
 typedef boost::shared_ptr<HashCore> HashCorePtr;

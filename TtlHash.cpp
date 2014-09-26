@@ -6,7 +6,8 @@ TtlHash::Record::Record(const std::string &_value, uint64_t _kill_ts):
 	
 }
 
-TtlHash::TtlHash(uint64_t _defailt_ttl, uint64_t _cleanup_period, uint64_t _cleanup_check_size):
+TtlHash::TtlHash(const std::string &_name, uint64_t _defailt_ttl, uint64_t _cleanup_period, uint64_t _cleanup_check_size):
+	Hash(_name),
 	m_default_ttl(_defailt_ttl),
 	m_cleanup_period(_cleanup_period),
 	m_cleanup_check_size(_cleanup_check_size),
@@ -176,3 +177,70 @@ void TtlHash::doService() {
 		m_last_cleanup_ts = time(0);
 	}
 }
+
+void TtlHash::dump(int _fd) {
+	
+	TtlHashDescr hash_pb;
+
+	hash_pb.set_name(m_name);
+	hash_pb.set_default_ttl(m_default_ttl);
+	hash_pb.set_cleanup_period(m_cleanup_period);
+	hash_pb.set_cleanup_check_size(m_cleanup_check_size);
+
+	std::string dump = hash_pb.SerializeAsString();
+	
+	uint32_t record_type = HC_DR_TTL_HASH_DESCR;
+	uint32_t record_size = dump.size();
+	
+	iovec atom[3];
+	
+	atom[0].iov_base = (void*) &record_type;
+	atom[0].iov_len = sizeof(record_type);
+	
+	atom[1].iov_base = (void*) &record_size;
+	atom[1].iov_len = sizeof(record_size);
+	
+	atom[2].iov_base = (void*) dump.data();
+	atom[2].iov_len = record_size;
+	
+	writev(_fd, atom, 3);
+	
+	hiaux::hashtable<std::string, Record>::iterator it = m_records.begin();
+	hiaux::hashtable<std::string, Record>::iterator end = m_records.end();
+	
+	while (it != end) {
+		
+		TtlHashKv kv_pb;
+		kv_pb.set_hash(m_name.c_str());
+		kv_pb.set_k(it->first.c_str());
+		kv_pb.set_v(it->second.value.c_str());
+		kv_pb.set_kill_ts(it->second.kill_ts);
+		
+		std::string dump = kv_pb.SerializeAsString();
+		
+		uint32_t record_type = HC_DR_TTL_HASH_KV;
+		uint32_t record_size = dump.size();
+		
+		iovec atom[3];
+	
+		atom[0].iov_base = (void*) &record_type;
+		atom[0].iov_len = sizeof(record_type);
+	
+		atom[1].iov_base = (void*) &record_size;
+		atom[1].iov_len = sizeof(record_size);
+	
+		atom[2].iov_base = (void*) dump.data();
+		atom[2].iov_len = record_size;
+	
+		writev(_fd, atom, 3);
+		
+		it++;
+	}
+}
+
+void TtlHash::restore(void *_pb) {
+	
+	TtlHashKv *pb = (TtlHashKv*)_pb;
+	m_records.insert(std::pair<std::string, Record>(pb->k(), Record(pb->v(), pb->kill_ts())));
+}
+

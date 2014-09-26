@@ -52,7 +52,7 @@ int main (int argv, char **argc) {
 //	
 //		sleep(1);
 	
-		client->get("_hash_", "_dead_key_", boost::bind(&onGot, _1, _2));
+		client->get("_hash_", "_key_", boost::bind(&onGot, _1, _2));
 		
 		sleep(1);
 		

@@ -1,7 +1,8 @@
 #include "HashCore.h"
 
 
-Hash::Hash() {	
+Hash::Hash(const std::string &_name):
+m_name(_name) {	
 }
 
 void Hash::set(const std::string &_k, const std::string &_v) {
@@ -86,3 +87,11 @@ void HashCore::Hash::setHashDefaultTtl(uint64_t _ttl) {
 	m_default_ttl = _ttl;
 }
 */
+
+void Hash::dump(int _fd) {
+	
+}
+
+void Hash::restore(void *_pb) {
+	
+}

@@ -1,0 +1,8 @@
+
+message TtlHashKv {
+	
+	required string hash = 1;
+	required string k = 2;
+	required string v = 3;
+	required int64 kill_ts = 4;
+};

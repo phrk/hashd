@@ -6,8 +6,15 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 #include "HashCoreErrors.h"
+#include "TtlHashDescr.pb.h"
+#include "TtlHashKv.pb.h"
 
 #include "hiaux/threads/locks.h"
+#include "hiaux/fs/file_utils.h"
+#include <sys/uio.h>
+
+#define HC_DR_TTL_HASH_DESCR 0
+#define HC_DR_TTL_HASH_KV 1
 
 class TtlHash : public Hash {
 	
@@ -35,7 +42,7 @@ class TtlHash : public Hash {
 
 public:
 		
-	TtlHash(uint64_t _defailt_ttl, uint64_t _cleanup_period, uint64_t _cleanup_check_size);
+	TtlHash(const std::string &_name, uint64_t _defailt_ttl, uint64_t _cleanup_period, uint64_t _cleanup_check_size);
 	
 	virtual void set(const std::string &_k, const std::string &_v);
 	virtual void set_and_inc_ttl(const std::string &_k, const std::string &_v, uint64_t &_ttl_inc);
@@ -44,6 +51,9 @@ public:
 	virtual int getTtl(const std::string &_k, uint64_t &_ttl);
 	
 	virtual void doService();
+	
+	virtual void dump(int _fd);
+	virtual void restore(void *_pb);
 };
 
 typedef boost::shared_ptr<TtlHash> TtlHashPtr;

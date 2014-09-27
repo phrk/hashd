@@ -50,10 +50,10 @@ class HashdClientAsync {
 	HttpOutRequestDispPtr m_req_disp;
 	
 	void buildCreateHashUrl(const std::string &_name, std::string &_url);
-	void buildSetUrl (const std::string &_hash, const std::string &_k, std::string &_url);
-	void buildSetAndIncTtlUrl(const std::string &_hash, const std::string &_k, std::string &_url);
-	void buildGetUrl(const std::string &_hash, const std::string &_k, std::string &_url);
-	void buildDelUrl(const std::string &_hash, const std::string &_k, std::string &_url);
+	void buildSetUrl (const std::string &_hash, std::string &_url);
+	void buildSetAndIncTtlUrl(const std::string &_hash, std::string &_url);
+	void buildGetUrl(const std::string &_hash, std::string &_url);
+	void buildDelUrl(const std::string &_hash, std::string &_url);
 	void buildGetTtlUrl(const std::string &_hash, const std::string &_k, std::string &_url);
 	
 	/*

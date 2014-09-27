@@ -1,5 +1,5 @@
 
 message PbGetResp {
 	required int32 err = 1;
-	required string value = 2;
+	required bytes value = 2;
 };

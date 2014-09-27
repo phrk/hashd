@@ -1,7 +1,7 @@
 
 message TtlHashDescr {
 	
-	required string name = 1;
+	required bytes name = 1;
 	required int64 default_ttl = 2;
 	required int64 cleanup_period = 3;
 	required int64 cleanup_check_size = 4;

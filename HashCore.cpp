@@ -108,6 +108,8 @@ void HashCore::onSet(const std::string &_hash, const std::string &_k, const std:
 	
 	checkRunService();
 	
+//	std::cout << "HashCore::onSet " << _k << std::endl;;
+	
 	hiaux::hashtable<std::string, HashPtr>::iterator it = m_hashes.find(_hash);
 	
 	if (it == m_hashes.end()) {

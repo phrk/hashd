@@ -16,40 +16,40 @@ void HashdClientAsync::buildCreateHashUrl(const std::string &_name, std::string 
 	m_http_api.buildRequestUrlSigned("create-hash", get_params, _url);
 }
 
-void HashdClientAsync::buildSetUrl (const std::string &_hash, const std::string &_k, std::string &_url) {
+void HashdClientAsync::buildSetUrl (const std::string &_hash, std::string &_url) {
 	
 	hiaux::hashtable<std::string, std::string> get_params;
 	get_params["hash"] = _hash;
-	get_params["k"] = _k;
+	//get_params["k"] = _k;
 	// other in post
 	
 	m_http_api.buildRequestUrlSigned("set", get_params, _url);
 }
 
-void HashdClientAsync::buildSetAndIncTtlUrl(const std::string &_hash, const std::string &_k, std::string &_url) {
+void HashdClientAsync::buildSetAndIncTtlUrl(const std::string &_hash, std::string &_url) {
 	
 	hiaux::hashtable<std::string, std::string> get_params;
 	get_params["hash"] = _hash;
-	get_params["k"] = _k;
+	//get_params["k"] = _k;
 	// other in post
 	
 	m_http_api.buildRequestUrlSigned("set-and-inc-ttl", get_params, _url);
 }
 
-void HashdClientAsync::buildGetUrl(const std::string &_hash, const std::string &_k, std::string &_url) {
+void HashdClientAsync::buildGetUrl(const std::string &_hash, std::string &_url) {
 	
 	hiaux::hashtable<std::string, std::string> get_params;
 	get_params["hash"] = _hash;
-	get_params["k"] = _k;
+	//get_params["k"] = _k;
 	
 	m_http_api.buildRequestUrlSigned("get", get_params, _url);
 }
 
-void HashdClientAsync::buildDelUrl(const std::string &_hash, const std::string &_k, std::string &_url) {
+void HashdClientAsync::buildDelUrl(const std::string &_hash, std::string &_url) {
 	
 	hiaux::hashtable<std::string, std::string> get_params;
 	get_params["hash"] = _hash;
-	get_params["k"] = _k;
+	//get_params["k"] = _k;
 	
 	m_http_api.buildRequestUrlSigned("del", get_params, _url);
 }
@@ -236,12 +236,18 @@ void HashdClientAsync::createHash(const std::string &_name, const std::map<std::
 void HashdClientAsync::set(const std::string &_hash, const std::string &_k, const std::string &_v, boost::function<void(int _err)> _onDone) {
 	
 	std::string url;
-	buildSetUrl(_hash, _k, url);
+	buildSetUrl(_hash, url);
 	
 	HttpApiPostData pb;
 	HttpApiPostDataField *field = pb.add_fields();
 	field->set_field("v");
 	field->set_value(_v);
+	
+	{
+		HttpApiPostDataField *field = pb.add_fields();
+		field->set_field("k");
+		field->set_value(_k);
+	}
 	
 	std::string tmp_postdata = pb.SerializeAsString();
 	
@@ -266,13 +272,18 @@ void HashdClientAsync::set(const std::string &_hash, const std::string &_k, cons
 void HashdClientAsync::setAndIncTtl(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t _ttl_inc, boost::function<void(int _err)> _onDone) {
 	
 	std::string url;
-	buildSetAndIncTtlUrl(_hash, _k, url);
+	buildSetAndIncTtlUrl(_hash, url);
 	
 	HttpApiPostData pb;
 	{
 		HttpApiPostDataField *field = pb.add_fields();
 		field->set_field("v");
 		field->set_value(_v);
+	}
+	{
+		HttpApiPostDataField *field = pb.add_fields();
+		field->set_field("k");
+		field->set_value(_k);
 	}
 	{
 		HttpApiPostDataField *field = pb.add_fields();
@@ -304,17 +315,28 @@ void HashdClientAsync::setAndIncTtl(const std::string &_hash, const std::string 
 void HashdClientAsync::get(const std::string &_hash, const std::string &_k, boost::function<void(int _err, const std::string &_v)> _onDone) {
 	
 	std::string url;
-	buildGetUrl(_hash, _k, url);
+	buildGetUrl(_hash, url);
+	
+	HttpApiPostData pb;
+	{
+		HttpApiPostDataField *field = pb.add_fields();
+		field->set_field("k");
+		field->set_value(_k);
+	}
+	
+	std::string tmp_postdata = pb.SerializeAsString();
+	std::string postdata = base64_encode((unsigned char *)tmp_postdata.c_str(), tmp_postdata.size());
 	
 	HashdContextIntStringPtr context (new HashdContextIntString);
 	context->onDone = _onDone;
 	
 	HttpOutRequestDisp::RequesterPtr requester
-		(new HttpSimpleRequester (boost::bind(&HttpOutRequestDisp::onCall, m_req_disp.get(), _1, _2, _3),
+		(new HttpSimpleRequesterPost (boost::bind(&HttpOutRequestDisp::onCall, m_req_disp.get(), _1, _2, _3),
 									boost::bind(&HttpOutRequestDisp::onCallPost, m_req_disp.get(), _1, _2, _3, _4),
 										boost::bind(&HttpOutRequestDisp::onRequesterFinished, m_req_disp.get(), _1),
 										context,
 										url,
+										postdata,
 										boost::bind(&HashdClientAsync::onCalledContextIntStringOk, this, _1, _2),
 										boost::bind(&HashdClientAsync::onCalledContextIntStringFail, this, _1)));
 
@@ -324,17 +346,28 @@ void HashdClientAsync::get(const std::string &_hash, const std::string &_k, boos
 void HashdClientAsync::del(const std::string &_hash, const std::string &_k, boost::function<void(int)> _onDone) {
 
 	std::string url;
-	buildDelUrl(_hash, _k, url);
+	buildDelUrl(_hash, url);
+	
+	HttpApiPostData pb;
+	{
+		HttpApiPostDataField *field = pb.add_fields();
+		field->set_field("k");
+		field->set_value(_k);
+	}
+	
+	std::string tmp_postdata = pb.SerializeAsString();
+	std::string postdata = base64_encode((unsigned char *)tmp_postdata.c_str(), tmp_postdata.size());
 	
 	HashdContextIntPtr context (new HashdContextInt);
 	context->onDone = _onDone;
 	
 	HttpOutRequestDisp::RequesterPtr requester
-		(new HttpSimpleRequester (boost::bind(&HttpOutRequestDisp::onCall, m_req_disp.get(), _1, _2, _3),
+		(new HttpSimpleRequesterPost (boost::bind(&HttpOutRequestDisp::onCall, m_req_disp.get(), _1, _2, _3),
 									boost::bind(&HttpOutRequestDisp::onCallPost, m_req_disp.get(), _1, _2, _3, _4),
 										boost::bind(&HttpOutRequestDisp::onRequesterFinished, m_req_disp.get(), _1),
 										context,
 										url,
+										postdata,
 										boost::bind(&HashdClientAsync::onCalledContextIntOk, this, _1, _2),
 										boost::bind(&HashdClientAsync::onCalledContextIntFail, this, _1)));
 

@@ -1,6 +1,10 @@
 #include "hiconfig.h"
 #include "hashd.h"
 
+#include "signal.h"
+#include <sys/types.h>
+#include <sys/wait.h>
+
 void signal_callback_handler(int signum) {
 	
 	int status;

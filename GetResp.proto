@@ -2,4 +2,5 @@
 message PbGetResp {
 	required int32 err = 1;
 	required bytes value = 2;
+	optional uint64 ttl = 3;
 };

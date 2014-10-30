@@ -20,10 +20,14 @@ void TtlHash::set(const std::string &_k, const std::string &_v) {
 	
 	if (it == m_records.end()) {
 		
-		if (m_default_ttl != 0)
+		if (m_default_ttl != 0) {
 			m_records.insert(std::pair<std::string,Record>(_k, Record(_v, time(0) + m_default_ttl)));
-		else
+			//std::cout << "TtlHash::set " << _k << " ttl: " <<  m_default_ttl << std::endl;
+		}
+		else {
 			m_records.insert(std::pair<std::string,Record>(_k, Record(_v, 0)));
+			//std::cout << "TtlHash::set " << _k << " ttl: " << 0 << std::endl;
+		}
 	} else
 		it->second.value = _v;
 }
@@ -34,16 +38,47 @@ void TtlHash::set_and_inc_ttl(const std::string &_k, const std::string &_v, uint
 	
 	if (it == m_records.end()) {
 		
-		if (m_default_ttl != 0)
+		if (m_default_ttl != 0) {
 			m_records.insert(std::pair<std::string,Record>(_k, Record(_v, time(0) + m_default_ttl + _ttl_inc )));
-		else
+			//std::cout << "TtlHash::set_and_inc_ttl " << _k << " ttl: " <<  m_default_ttl + _ttl_inc << std::endl;
+		}
+		else {
 			m_records.insert(std::pair<std::string,Record>(_k, Record(_v, time(0) + _ttl_inc )));
+			//std::cout << "TtlHash::set_and_inc_ttl " << _k << " ttl: " << 0 << std::endl;
+		}
 
 	} else {
+		//std::cout << "TtlHash::set_and_inc_ttl " << _k << " inc_ttl: " << _ttl_inc << std::endl;
 		it->second.value = _v;
 		it->second.kill_ts += _ttl_inc;
 	}
 }
+
+int TtlHash::getWithTtl(const std::string &_k, std::string &_v, uint64_t &_ttl) {
+	
+	hiaux::hashtable<std::string, Record>::iterator it = m_records.find(_k);
+	
+	if (it != m_records.end()) {
+		
+		uint64_t now = time(0);
+		
+		if (it->second.kill_ts < now) {
+			
+			m_records.erase(it);
+			return E_HC_KEY_DONT_EXISTS;
+		}
+		
+		_v = it->second.value;
+		_ttl = it->second.kill_ts - now;
+		return E_HC_OK;
+	}
+	else {
+		return E_HC_KEY_DONT_EXISTS;
+	}
+	
+	return E_HC_OK;
+}
+
 /*
 void HashCore::Hash::setWithTtl(const std::string &_k, const std::string &_v, uint64_t &_ttl_inc) {
 	
@@ -146,7 +181,7 @@ void TtlHash::cleanUp() {
 	while (keys_viewed < m_cleanup_period && it != m_records.end()) {
 		
 		if (it->second.kill_ts < now && it->second.kill_ts != 0) {
-			//std::cout << "erasing " << it->first << std::endl; 
+			std::cout << "erasing " << it->first << std::endl; 
 			m_records.erase(it);
 			
 			if (m_records.size() == 0)

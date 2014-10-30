@@ -164,6 +164,23 @@ void HashCore::onGet(const std::string &_hash, const std::string &_k, std::strin
 	}
 }
 
+void HashCore::onGetWithTtl(const std::string &_hash, const std::string &_k, std::string &_v, uint64_t &_ttl, int &_err) {
+	
+	hLockTicketPtr ticket = m_lock.lock();
+	
+	checkRunService();
+	
+	hiaux::hashtable<std::string, HashPtr>::iterator it = m_hashes.find(_hash);
+	
+	if (it == m_hashes.end()) {
+		
+		_err = E_HC_HASH_DONT_EXISTS;
+		return;
+	}
+	
+	_err = it->second->getWithTtl(_k, _v, _ttl);
+}
+
 void HashCore::onDel(const std::string &_hash, const std::string &_k, int &_err) {
 	
 	hLockTicketPtr ticket = m_lock.lock();

@@ -23,6 +23,7 @@ class HashdApi {
 	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, int &_err)> m_onSetAndIncTtl;	
 	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, int &_err)> m_onSet;
 	boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v, int &_err)> m_onGet;
+	boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v, uint64_t &_ttl, int &_err)> m_onGetWithTtl;
 	boost::function<void(const std::string &_hash, const std::string &_k, int &_err)> m_onDel;
 	boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl, int &_err)> m_onGetTtl;
 	
@@ -32,6 +33,7 @@ public:
 	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, int &_err)> _onSetAndIncTtl,
 			boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, int &_err)> _onSet,
 			boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v, int &_err)> _onGet,
+			boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v, uint64_t &_ttl, int &_err)> _onGetWithTtl,
 			boost::function<void(const std::string &_hash, const std::string &_k, int &_err)> _onDel,
 			boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl, int &_err)> _onGetTtl
 				);
@@ -42,6 +44,7 @@ public:
 	void onSetAndIncTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);	
 	void onSet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 	void onGet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 	void onDel(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 	void onGetTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 };

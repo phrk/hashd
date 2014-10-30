@@ -45,6 +45,12 @@ bool Hash::get(const std::string &_k, std::string &_v) {
 		_v = it->second;
 	return true;
 }
+
+int Hash::getWithTtl(const std::string &_k, std::string &_v, uint64_t &_ttl) {
+	
+	return E_HC_INAPPLICABLE_METHOD;
+}
+
 /*
 void HashCore::Hash::getWithTtl(const std::string &_k, uint64_t _ttl_inc, std::string &_v) {
 	

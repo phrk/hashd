@@ -9,6 +9,7 @@ HashdApi::HashdApi(
 	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, int &_err)> _onSetAndIncTtl,	
 	boost::function<void(const std::string &_hash, const std::string &_k, const std::string &_v, int &_err)> _onSet,
 	boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v, int &_err)> _onGet,
+	boost::function<void(const std::string &_hash, const std::string &_k, std::string &_v, uint64_t &_ttl, int &_err)> _onGetWithTtl,
 	boost::function<void(const std::string &_hash, const std::string &_k, int &_err)> _onDel,
 	boost::function<void(const std::string &_hash, const std::string &_k, uint64_t &_ttl, int &_err)> _onGetTtl):
 
@@ -16,6 +17,7 @@ HashdApi::HashdApi(
 	m_onSet(_onSet),
 	m_onSetAndIncTtl(_onSetAndIncTtl),
 	m_onGet(_onGet),
+	m_onGetWithTtl(_onGetWithTtl),
 	m_onDel(_onDel),
 	m_onGetTtl(_onGetTtl)
 	{
@@ -47,6 +49,11 @@ HashdApi::HashdApi(
 	args_names.push_back("hash");
 	args_names.push_back("k");
 	m_api->addMethodSignedAsync("get", args_names, boost::bind(&HashdApi::onGet, this, _1, _2));
+	args_names.clear();
+
+	args_names.push_back("hash");
+	args_names.push_back("k");
+	m_api->addMethodSignedAsync("get-with-ttl", args_names, boost::bind(&HashdApi::onGetWithTtl, this, _1, _2));
 	args_names.clear();
 
 	args_names.push_back("hash");
@@ -115,6 +122,18 @@ void HashdApi::onGet(hiaux::hashtable<std::string, std::string> &_params, boost:
 	int err;
 	GetResp pb;
 	m_onGet(_params["hash"], _params["k"], pb.value, pb.err);
+	
+	std::string resp;
+	pb.dump(resp);
+	
+	_onDone( base64_encode ( (unsigned char *)resp.c_str(), resp.size() ) );
+}
+
+void HashdApi::onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
+	
+	int err;
+	GetResp pb;
+	m_onGetWithTtl(_params["hash"], _params["k"], pb.value, pb.ttl, pb.err);
 	
 	std::string resp;
 	pb.dump(resp);

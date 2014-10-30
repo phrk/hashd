@@ -45,6 +45,15 @@ void HashdClientAsync::buildGetUrl(const std::string &_hash, std::string &_url) 
 	m_http_api.buildRequestUrlSigned("get", get_params, _url);
 }
 
+void HashdClientAsync::buildGetWithTtlUrl(const std::string &_hash, std::string &_url) {
+
+	hiaux::hashtable<std::string, std::string> get_params;
+	get_params["hash"] = _hash;
+	//get_params["k"] = _k;
+	
+	m_http_api.buildRequestUrlSigned("get-with-ttl", get_params, _url);
+}
+
 void HashdClientAsync::buildDelUrl(const std::string &_hash, std::string &_url) {
 	
 	hiaux::hashtable<std::string, std::string> get_params;
@@ -182,6 +191,23 @@ void HashdClientAsync::onCalledContextIntUint64Fail(CallContextPtr _context) {
 	HashdContextIntUint64* context = ( (HashdContextIntUint64*) _context.get() );
 	context->onDone(E_HC_CONNECTIVITY_ERROR, 0);
 }
+
+void HashdClientAsync::onCalledContextIntStringUint64Ok(CallContextPtr _context, const std::string &_resp) {
+		
+	HashdContextIntStringUint64* context = ( (HashdContextIntStringUint64*) _context.get() );
+	
+	GetResp pb;
+	pb.restore(base64_decode(_resp));
+	
+	context->onDone(pb.err, pb.value, pb.ttl);
+}
+
+void HashdClientAsync::onCalledContextIntStringUint64Fail(CallContextPtr _context) {
+	
+	HashdContextIntStringUint64* context = ( (HashdContextIntStringUint64*) _context.get() );
+	context->onDone(E_HC_CONNECTIVITY_ERROR, "", 0);
+}
+
 
 ///////////////////////// Public methods
 
@@ -339,6 +365,38 @@ void HashdClientAsync::get(const std::string &_hash, const std::string &_k, boos
 										postdata,
 										boost::bind(&HashdClientAsync::onCalledContextIntStringOk, this, _1, _2),
 										boost::bind(&HashdClientAsync::onCalledContextIntStringFail, this, _1)));
+
+	m_req_disp->addRequester(requester);
+}
+
+void HashdClientAsync::getWithTtl(const std::string &_hash,
+									const std::string &_k,
+									boost::function<void(int _err, const std::string &_v, uint64_t _ttl)> _onDone) {
+	std::string url;
+	buildGetWithTtlUrl(_hash, url);
+	
+	HttpApiPostData pb;
+	{
+		HttpApiPostDataField *field = pb.add_fields();
+		field->set_field("k");
+		field->set_value(_k);
+	}
+
+	std::string tmp_postdata = pb.SerializeAsString();
+	std::string postdata = base64_encode((unsigned char *)tmp_postdata.c_str(), tmp_postdata.size());
+
+	HashdContextIntStringUint64Ptr context (new HashdContextIntStringUint64);
+	context->onDone = _onDone;
+
+	HttpOutRequestDisp::RequesterPtr requester
+		(new HttpSimpleRequesterPost (boost::bind(&HttpOutRequestDisp::onCall, m_req_disp.get(), _1, _2, _3),
+									boost::bind(&HttpOutRequestDisp::onCallPost, m_req_disp.get(), _1, _2, _3, _4),
+										boost::bind(&HttpOutRequestDisp::onRequesterFinished, m_req_disp.get(), _1),
+										context,
+										url,
+										postdata,
+										boost::bind(&HashdClientAsync::onCalledContextIntStringUint64Ok, this, _1, _2),
+										boost::bind(&HashdClientAsync::onCalledContextIntStringUint64Fail, this, _1)));
 
 	m_req_disp->addRequester(requester);
 }

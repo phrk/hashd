@@ -16,6 +16,7 @@ void GetResp::restore(const std::string &_dump) {
 	pb.ParseFromString(_dump);
 	err = pb.err();
 	value = pb.value();
+	ttl = pb.ttl();
 }
 
 void GetResp::dump(std::string &_dump) {
@@ -23,5 +24,6 @@ void GetResp::dump(std::string &_dump) {
 	PbGetResp pb;
 	pb.set_err(err);
 	pb.set_value(value);
+	pb.set_ttl(ttl);
 	_dump = pb.SerializeAsString();
 }

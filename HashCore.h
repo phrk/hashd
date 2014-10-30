@@ -34,6 +34,7 @@ public:
 	void onSet(const std::string &_hash, const std::string &_k, const std::string &_v, int &_err);
 	void onSetAndIncTtl(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t &_ttl_inc, int &_err);
 	void onGet(const std::string &_hash, const std::string &_k, std::string &_v, int &_err);
+	void onGetWithTtl(const std::string &_hash, const std::string &_k, std::string &_v, uint64_t &_ttl, int &_err);
 	void onDel(const std::string &_hash, const std::string &_k, int &_err);
 	void onGetTtl(const std::string &_hash, const std::string &_k, uint64_t &_ttl, int &_err);
 	

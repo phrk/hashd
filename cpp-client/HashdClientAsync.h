@@ -45,6 +45,15 @@ public:
 
 typedef boost::shared_ptr<HashdContextIntString> HashdContextIntStringPtr;
 
+class HashdContextIntStringUint64 : public CallContext {
+public:
+	boost::function<void(int, const std::string &, uint64_t)> onDone;
+	virtual ~HashdContextIntStringUint64() { }
+};
+
+typedef boost::shared_ptr<HashdContextIntStringUint64> HashdContextIntStringUint64Ptr;
+
+
 class HashdClientAsync {
 	HttpApiClient m_http_api;
 	HttpOutRequestDispPtr m_req_disp;
@@ -53,6 +62,7 @@ class HashdClientAsync {
 	void buildSetUrl (const std::string &_hash, std::string &_url);
 	void buildSetAndIncTtlUrl(const std::string &_hash, std::string &_url);
 	void buildGetUrl(const std::string &_hash, std::string &_url);
+	void buildGetWithTtlUrl(const std::string &_hash, std::string &_url);
 	void buildDelUrl(const std::string &_hash, std::string &_url);
 	void buildGetTtlUrl(const std::string &_hash, const std::string &_k, std::string &_url);
 	
@@ -74,6 +84,9 @@ class HashdClientAsync {
 
 	void onCalledContextIntUint64Ok(CallContextPtr _context, const std::string &_resp);
 	void onCalledContextIntUint64Fail(CallContextPtr _context);
+	
+	void onCalledContextIntStringUint64Ok(CallContextPtr _context, const std::string &_resp);
+	void onCalledContextIntStringUint64Fail(CallContextPtr _context);
 	/*
 	void onCalledContextBoolOk(CallContextPtr _context, const std::string &_resp);
 	void onCalledContextBoolFail(CallContextPtr _context);
@@ -88,6 +101,7 @@ public:
 	void set(const std::string &_hash, const std::string &_k, const std::string &_v, boost::function<void(int _err)> _onDone);
 	void setAndIncTtl(const std::string &_hash, const std::string &_k, const std::string &_v, uint64_t _ttl_inc, boost::function<void(int _err)> _onDone);
 	void get(const std::string &_hash, const std::string &_k, boost::function<void(int _err, const std::string &_v)> _onDone);
+	void getWithTtl(const std::string &_hash, const std::string &_k, boost::function<void(int _err, const std::string &_v, uint64_t _ttl)> _onDone);
 	void del(const std::string &_hash, const std::string &_k, boost::function<void(int _err)> _onDone);
 	void getTtl(const std::string &_hash, const std::string &_k, boost::function<void(int _err, uint64_t _ttl)> _onDone);
 };

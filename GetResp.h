@@ -11,6 +11,7 @@ public:
 	
 	int err;
 	std::string value;
+	uint64_t ttl;
 
 	void restore(const std::string &_dump);
 	void dump(std::string &_dump);

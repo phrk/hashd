@@ -8,8 +8,16 @@ void Hashd::setParamsList(std::vector<std::string> &_required_params, std::vecto
 
 Hashd::Hashd(const std::string &_config_file) {
 	
+	setDefaultSignalHandlers();
+	
 	m_last_dump_ts = time(0);
 	loadConfig(_config_file);
+}
+
+void Hashd::doStart() {
+	
+	std::cout << "Hashd::doStart\n";
+	
 	startListening(strtoint(m_config["nthreads"]), strtoint(m_config["listen_port"]));
 	
 	m_core.reset(new HashCore(m_srv_tasklauncher));
@@ -32,7 +40,6 @@ Hashd::Hashd(const std::string &_config_file) {
 		close(fd);
 	}
 	
-	
 	m_api.reset(new HashdApi(boost::bind(&HashCore::onCreateHash, m_core.get(), _1, _2, _3),
 							boost::bind(&HashCore::onSetAndIncTtl, m_core.get(), _1, _2, _3, _4, _5),
 							boost::bind(&HashCore::onSet, m_core.get(), _1, _2, _3, _4),
@@ -44,10 +51,6 @@ Hashd::Hashd(const std::string &_config_file) {
 			//				boost::bind(&HashCore::onSetHashNlruShots, m_core.get(), _1, _2),
 			//				boost::bind(&HashCore::onSetHashDefaultTtl, m_core.get(), _1, _2)
 			));
-	
-}
-
-void Hashd::doStart() {
 	
 	std::cout << "hashd started on port " << m_config["listen_port"] << std::endl;
 }

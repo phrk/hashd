@@ -2,7 +2,7 @@
 #define _HASHD_CLIENT_ASYNC_H_
 
 #include <boost/shared_ptr.hpp>
-#include "hiaux/network/HttpApiClient.h"
+#include "hiaux/network/HttpApi/HttpApiClient.h"
 #include "hiaux/network/HttpSimpleRequester.h"
 #include "hiaux/network/HttpSimpleRequesterPost.h"
 

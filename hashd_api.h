@@ -5,7 +5,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
-#include "hiaux/network/HttpApi.h"
+#include "hiaux/network/HttpApi/HttpApi.h"
 #include <string>
 #include <vector>
 #include "hiaux/strings/string_utils.h"

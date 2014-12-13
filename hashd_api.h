@@ -40,13 +40,13 @@ public:
 	
 	void handle(HttpConnectionPtr _conn, HttpRequestPtr _req);
 	
-	void onCreateHash(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
-	void onSetAndIncTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);	
-	void onSet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
-	void onGet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
-	void onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
-	void onDel(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
-	void onGetTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onCreateHash(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onSetAndIncTtl(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);	
+	void onSet(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onGet(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onGetWithTtl(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onDel(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
+	void onGetTtl(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone);
 };
 
 typedef boost::shared_ptr<HashdApi> HashdApiPtr;

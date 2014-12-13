@@ -72,7 +72,7 @@ void HashdApi::handle(HttpConnectionPtr _conn, HttpRequestPtr _req) {
 	m_api->handle(_conn, _req);
 }
 
-void HashdApi::onCreateHash(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
+void HashdApi::onCreateHash(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
 	
 	std::map<std::string, std::string> opts;
 		
@@ -94,7 +94,7 @@ void HashdApi::onCreateHash(hiaux::hashtable<std::string, std::string> &_params,
 	_onDone(bf);
 }
 
-void HashdApi::onSet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
+void HashdApi::onSet(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
 	
 	int err;
 	char bf[255];
@@ -105,7 +105,7 @@ void HashdApi::onSet(hiaux::hashtable<std::string, std::string> &_params, boost:
 	_onDone(bf);
 }
 
-void HashdApi::onSetAndIncTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
+void HashdApi::onSetAndIncTtl(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
 	
 	uint64_t ttl_inc = string_to_uint64(_params["ttl-inc"]);
 	int err;
@@ -117,7 +117,7 @@ void HashdApi::onSetAndIncTtl(hiaux::hashtable<std::string, std::string> &_param
 	_onDone(bf);
 }
 
-void HashdApi::onGet(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
+void HashdApi::onGet(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
 	
 	int err;
 	GetResp pb;
@@ -129,7 +129,7 @@ void HashdApi::onGet(hiaux::hashtable<std::string, std::string> &_params, boost:
 	_onDone( base64_encode ( (unsigned char *)resp.c_str(), resp.size() ) );
 }
 
-void HashdApi::onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
+void HashdApi::onGetWithTtl(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
 	
 	int err;
 	GetResp pb;
@@ -141,7 +141,7 @@ void HashdApi::onGetWithTtl(hiaux::hashtable<std::string, std::string> &_params,
 	_onDone( base64_encode ( (unsigned char *)resp.c_str(), resp.size() ) );
 }
 
-void HashdApi::onDel(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
+void HashdApi::onDel(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
 	
 	int err;
 	char bf[255];
@@ -151,7 +151,7 @@ void HashdApi::onDel(hiaux::hashtable<std::string, std::string> &_params, boost:
 	_onDone(bf);
 }
 
-void HashdApi::onGetTtl(hiaux::hashtable<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
+void HashdApi::onGetTtl(std::map<std::string, std::string> &_params, boost::function< void(const std::string&)> _onDone) {
 	
 	int err;
 	char bf[50];

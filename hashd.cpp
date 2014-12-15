@@ -53,6 +53,7 @@ void Hashd::doStart() {
 			));
 	
 	std::cout << "hashd started on port " << m_config["listen_port"] << std::endl;
+	m_pool->join();
 }
 
 void Hashd::connHandler(HttpConnectionPtr _conn, HttpRequestPtr _req) {	

@@ -14,6 +14,10 @@
 
 class Hashd : public Daemon {
 
+	hThreadPoolPtr m_pool;
+	TaskLauncherPtr m_tasklauncher;
+	HttpServerPtr m_srv;
+
 	HashdApiPtr m_api;
 	HashCorePtr m_core;
 	

@@ -11,16 +11,26 @@ Hashd::Hashd(const std::string &_config_file) {
 	setDefaultSignalHandlers();
 	
 	m_last_dump_ts = time(0);
-	loadConfig(_config_file);
 }
 
 void Hashd::doStart() {
 	
 	std::cout << "Hashd::doStart\n";
 	
-	startListening(strtoint(m_config["nthreads"]), strtoint(m_config["listen_port"]));
+	//startListening(strtoint(m_config["nthreads"]), strtoint(m_config["listen_port"]));
 	
-	m_core.reset(new HashCore(m_srv_tasklauncher));
+	m_pool.reset(new hThreadPool( strtoint(m_config["nthreads"]) ));
+	m_tasklauncher.reset(new TaskLauncher(m_pool, strtoint(m_config["nthreads"]) , boost::bind(&Hashd::onFinished, this)));
+	
+	m_srv.reset(new HttpServer(m_tasklauncher,
+							ResponseInfo("text/html; charset=utf-8", "hashd"),
+							boost::bind(&Hashd::connHandler, this, _1, _2),
+							strtoint(m_config["listen_port"])));
+
+	m_pool->run();
+	m_pool->join();
+	
+	m_core.reset(new HashCore(m_tasklauncher));
 	
 	std::vector<std::string> files;
 	listFiles(".", files);

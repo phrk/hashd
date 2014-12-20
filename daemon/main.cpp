@@ -9,5 +9,5 @@ int main (int argc, char **argv) {
 
 	
 	Hashd *h = new Hashd("hashd.conf");
-	h->start(false);
+	h->start("hashd.conf", argc, argv);
 }
